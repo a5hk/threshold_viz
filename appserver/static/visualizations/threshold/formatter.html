@@ -1,0 +1,82 @@
+<!--form class="splunk-formatter-section" section-label="Format">
+  <splunk-control-group label="Date format">
+    <splunk-text-input name="{{VIZ_NAMESPACE}}.dateFormat" value="{yyyy}-{MM}-{dd}"></splunk-text-input>
+  </splunk-control-group>
+</form-->
+
+<form class="splunk-formatter-section" section-label="Type">
+  <splunk-control-group label="Chart Type">
+    <splunk-radio-input name="{{VIZ_NAMESPACE}}.chartType" value="line">
+      <option value="line">Line Chart</option>
+      <option value="bar">Bar Chart</option>
+    </splunk-radio-input>
+  </splunk-control-group>
+</form>
+
+<form class="splunk-formatter-section" section-label="Color Ranges">
+  <splunk-control-group class="vizviz-charts">
+    <splunk-control-group label="from" class="vizviz-charts-inner-label">
+      <splunk-text-input name="{{VIZ_NAMESPACE}}.colorRange1Min" value=""></splunk-text-input>
+    </splunk-control-group>
+    <splunk-control-group label="to" class="vizviz-charts-inner-label">
+      <splunk-text-input name="{{VIZ_NAMESPACE}}.colorRange1Max" value=""></splunk-text-input>
+    </splunk-control-group>
+    <splunk-color-picker name="{{VIZ_NAMESPACE}}.colorRange1" value="#0ce90c"></splunk-color-picker>
+  </splunk-control-group>
+
+  <splunk-control-group class="vizviz-charts">
+    <div style="width: 214px"></div>
+    <!-- <splunk-control-group label="from" class="vizviz-charts-inner-label">
+      <splunk-text-input name="{{VIZ_NAMESPACE}}.colorRange2Min"></splunk-text-input>
+    </splunk-control-group> -->
+    <splunk-control-group label="to" class="vizviz-charts-inner-label">
+      <splunk-text-input name="{{VIZ_NAMESPACE}}.colorRange2Max" value=""></splunk-text-input>
+    </splunk-control-group>
+    <splunk-color-picker name="{{VIZ_NAMESPACE}}.colorRange2" value="#f2f20d"></splunk-color-picker>
+  </splunk-control-group>
+
+  <splunk-control-group class="vizviz-charts">
+    <div style="width: 214px"></div>
+    <!-- <splunk-control-group label="from" class="vizviz-charts-inner-label">
+      <splunk-text-input name="{{VIZ_NAMESPACE}}.colorRange3Min" value=""></splunk-text-input>
+    </splunk-control-group> -->
+    <splunk-control-group label="to" class="vizviz-charts-inner-label">
+      <splunk-text-input name="{{VIZ_NAMESPACE}}.colorRange3Max" value=""></splunk-text-input>
+    </splunk-control-group>
+    <splunk-color-picker name="{{VIZ_NAMESPACE}}.colorRange3" value="#ff9500"></splunk-color-picker>
+  </splunk-control-group>
+
+  <splunk-control-group class="vizviz-charts">
+    <div style="width: 214px"></div>
+    <!-- <splunk-control-group label="from" class="vizviz-charts-inner-label">
+      <splunk-text-input name="{{VIZ_NAMESPACE}}.colorRange4Min" value=""></splunk-text-input>
+    </splunk-control-group> -->
+    <splunk-control-group label="to" class="vizviz-charts-inner-label">
+      <splunk-text-input name="{{VIZ_NAMESPACE}}.colorRange4Max" value=""></splunk-text-input>
+    </splunk-control-group>
+    <splunk-color-picker name="{{VIZ_NAMESPACE}}.colorRange4" value="#ff2222"></splunk-color-picker>
+  </splunk-control-group>
+
+  <splunk-control-group class="vizviz-charts">
+    <div style="width: 214px"></div>
+    <!-- <splunk-control-group label="from" class="vizviz-charts-inner-label">
+      <splunk-text-input name="{{VIZ_NAMESPACE}}.colorRange5Min" value=""></splunk-text-input>
+    </splunk-control-group> -->
+    <splunk-control-group label="to" class="vizviz-charts-inner-label">
+      <splunk-text-input name="{{VIZ_NAMESPACE}}.colorRange5Max" value=""></splunk-text-input>
+    </splunk-control-group>
+    <splunk-color-picker name="{{VIZ_NAMESPACE}}.colorRange5" value="#8d0707"></splunk-color-picker>
+  </splunk-control-group>
+</form>
+
+<!--form class="splunk-formatter-section" section-label="X Axis">
+  <splunk-control-group label="Label Rotation">
+    <splunk-radio-input name="{{VIZ_NAMESPACE}}.xrotate" value="0">
+      <option value="-90">-90</option>
+      <option value="-45">-45</option>
+      <option value="0">0</option>
+      <option value="45">45</option>
+      <option value="90">90</option>
+    </splunk-radio-input>
+  </splunk-control-group>
+</form-->
