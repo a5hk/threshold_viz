@@ -53,11 +53,10 @@ define([
       let opt = option(data, conf);
       c.setOption(opt);
 
-      // if (data.rows.length > this.chunk) {
-      this.offset += data.rows.length;
-      console.log(this.offset);
-      this.updateDataParams({ count: this.chunk, offset: this.offset });
-      // }
+      if (data.rows.length >= this.chunk && data.rows.length != 0) {
+        this.offset += data.rows.length;
+        this.updateDataParams({ count: this.chunk, offset: this.offset });
+      }
     },
 
     // Search data params
@@ -67,6 +66,11 @@ define([
         count: 50000,
       };
     },
+
+    // onConfigChange: function (_configChanges: any, _previousConfig: any) {
+    //   this.invalidateFormatData();
+    //   this.invalidateReflow();
+    // },
 
     // Override to respond to re-sizing events
     reflow: function () {
