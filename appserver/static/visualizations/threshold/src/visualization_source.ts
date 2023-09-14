@@ -49,21 +49,22 @@ define([
       }
 
       let c = this.initChart(this.el);
-      let conf = new Config(config);
-      c.setOption(option(data, conf));
+      let conf = new Config(config, SplunkVisualizationUtils.getCurrentTheme());
+      let opt = option(data, conf);
+      c.setOption(opt);
 
-      if (data.rows.length > this.chunk) {
-        this.offset += data.rows.length;
-        this.updateDataParams({ count: this.chunk, offset: this.offset });
-      }
+      // if (data.rows.length > this.chunk) {
+      this.offset += data.rows.length;
+      console.log(this.offset);
+      this.updateDataParams({ count: this.chunk, offset: this.offset });
+      // }
     },
 
     // Search data params
     getInitialDataParams: function () {
       return {
         outputMode: SplunkVisualizationBase.ROW_MAJOR_OUTPUT_MODE,
-        // outputMode: SplunkVisualizationBase.RAW_OUTPUT_MODE,
-        count: 10000,
+        count: 50000,
       };
     },
 
@@ -94,9 +95,7 @@ interface SearchResult {
 }
 
 class Config {
-  // "display.visualizations.custom.drilldown": string;
-  //dateFormat: string;
-  //xrotate: number;
+  background: string;
 
   chartType: "line" | "bar";
 
@@ -120,9 +119,11 @@ class Config {
   cr5max: string | number;
   color5: string;
 
-  constructor(c: any) {
-    //this.dateFormat = c["display.visualizations.custom.threshold_viz.threshold.dateFormat"] ?? "{yyyy}-{MM}-{dd}";
-    //this.xrotate = parseInt(c["display.visualizations.custom.threshold_viz.threshold.xrotate"]) || 0;
+  markLinesOpacity: number;
+  outOfRangeColor: string;
+
+  constructor(c: any, mode: string) {
+    this.background = mode === "dark" ? "#101317" : "#fff";
 
     this.chartType = c["display.visualizations.custom.threshold_viz.threshold.chartType"] === "bar" ? "bar" : "line";
 
@@ -130,25 +131,25 @@ class Config {
     this.cr1max = this.sanitizeItem(c["display.visualizations.custom.threshold_viz.threshold.colorRange1Max"]);
     this.color1 = c["display.visualizations.custom.threshold_viz.threshold.colorRange1"] ?? "#0ce90c";
 
-    // this.cr2min = this.sanitizeItem(c["display.visualizations.custom.threshold_viz.threshold.colorRange2Min"]);
     this.cr2min = this.cr1max;
     this.cr2max = this.sanitizeItem(c["display.visualizations.custom.threshold_viz.threshold.colorRange2Max"]);
     this.color2 = c["display.visualizations.custom.threshold_viz.threshold.colorRange2"] ?? "#f2f20d";
 
-    // this.cr3min = this.sanitizeItem(c["display.visualizations.custom.threshold_viz.threshold.colorRange3Min"]);
     this.cr3min = this.cr2max;
     this.cr3max = this.sanitizeItem(c["display.visualizations.custom.threshold_viz.threshold.colorRange3Max"]);
     this.color3 = c["display.visualizations.custom.threshold_viz.threshold.colorRange3"] ?? "#ff9500";
 
-    // this.cr4min = this.sanitizeItem(c["display.visualizations.custom.threshold_viz.threshold.colorRange4Min"]);
     this.cr4min = this.cr3max;
     this.cr4max = this.sanitizeItem(c["display.visualizations.custom.threshold_viz.threshold.colorRange4Max"]);
     this.color4 = c["display.visualizations.custom.threshold_viz.threshold.colorRange4"] ?? "#ff2222";
 
-    // this.cr5min = this.sanitizeItem(c["display.visualizations.custom.threshold_viz.threshold.colorRange5Min"]);
     this.cr5min = this.cr4max;
     this.cr5max = this.sanitizeItem(c["display.visualizations.custom.threshold_viz.threshold.colorRange5Max"]);
     this.color5 = c["display.visualizations.custom.threshold_viz.threshold.colorRange5"] ?? "#8d0707";
+
+    this.markLinesOpacity =
+      c["display.visualizations.custom.threshold_viz.threshold.thresholdLines"] === "true" ? 1 : 0;
+    this.outOfRangeColor = c["display.visualizations.custom.threshold_viz.threshold.outOfRangeColor"] ?? "#0c76e9";
   }
 
   sanitizeItem(s: string): number | string {
@@ -174,7 +175,8 @@ function series(dim: string[], config: Config) {
     ml = {
       markLine: {
         silent: true,
-        lineStyle: { color: "#00000099" },
+        symbol: ["none", "none"],
+        lineStyle: { color: "#00000099", opacity: config.markLinesOpacity },
         data: lines(config),
       },
     };
@@ -213,7 +215,7 @@ function lines(c: Config) {
   let data = [];
 
   if (c.cr1min !== "") {
-    if (c.cr1min !== "0") {
+    if (c.cr1min !== 0) {
       data.push(lineItem(c.cr1min));
     }
   } else {
@@ -221,7 +223,7 @@ function lines(c: Config) {
   }
 
   if (c.cr1max !== "") {
-    if (c.cr1max !== "0") {
+    if (c.cr1max !== 0) {
       data.push(lineItem(c.cr1max));
     }
   } else {
@@ -229,7 +231,7 @@ function lines(c: Config) {
   }
 
   if (c.cr2max !== "") {
-    if (c.cr2max !== "0") {
+    if (c.cr2max !== 0) {
       data.push(lineItem(c.cr2max));
     }
   } else {
@@ -237,7 +239,7 @@ function lines(c: Config) {
   }
 
   if (c.cr3max !== "") {
-    if (c.cr3max !== "0") {
+    if (c.cr3max !== 0) {
       data.push(lineItem(c.cr3max));
     }
   } else {
@@ -245,7 +247,7 @@ function lines(c: Config) {
   }
 
   if (c.cr4max !== "") {
-    if (c.cr4max !== "0") {
+    if (c.cr4max !== 0) {
       data.push(lineItem(c.cr4max));
     }
   } else {
@@ -315,7 +317,7 @@ function option(data: SearchResult, config: Config) {
         dimension: firstNonInternalDimention(dim),
         pieces: p,
         outOfRange: {
-          color: "#0c76e9",
+          color: config.outOfRangeColor,
         },
       },
     };
@@ -334,9 +336,9 @@ function option(data: SearchResult, config: Config) {
     xAxis: {
       type: "time",
       maxInterval: 3600 * 1000 * 12,
-      //axisLabel: { formatter: config.dateFormat, showMaxLabel: true, showMinLabel: true },
     },
     yAxis: {},
     series: series(dim, config),
+    toolbox: { feature: { saveAsImage: { backgroundColor: config.background }, dataZoom: {} } },
   };
 }
