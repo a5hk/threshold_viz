@@ -11,8 +11,6 @@ This visualization app lets you choose different colors for different ranges of 
 
 ![demo](/static/demo.gif)
 
-### demo
-
 ## License
 
 [MIT License](LICENSE)
