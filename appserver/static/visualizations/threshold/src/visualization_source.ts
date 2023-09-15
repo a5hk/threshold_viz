@@ -339,7 +339,6 @@ function option(data: SearchResult, config: Config) {
     },
     xAxis: {
       type: "time",
-      maxInterval: 3600 * 1000 * 12,
     },
     yAxis: {},
     series: series(dim, config),
